@@ -1,0 +1,3 @@
+MSFT Report
+MSE: 8.2131
+R²: 0.9462

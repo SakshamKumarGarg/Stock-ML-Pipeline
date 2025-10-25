@@ -1,0 +1,3 @@
+META Report
+MSE: 49.2509
+R²: 0.9281
