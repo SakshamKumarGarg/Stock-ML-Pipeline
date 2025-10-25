@@ -1,0 +1,25 @@
+# For data manipulation
+numpy
+pandas
+
+# For making HTTP requests
+requests
+
+# For loading environment variables
+python-dotenv
+
+# For YAML configuration
+PyYAML
+
+# For date and time handling
+python-dateutil
+
+# For file path manipulations
+pathlib
+
+# For GitHub and Git operations
+PyGithub
+GitPython
+
+# For plotting and visualization
+matplotlib

@@ -1,0 +1,17 @@
+symbols:
+  - AAPL
+  - GOOGL
+  - MSFT
+  - AMZN
+  - META
+  - NFLX
+fetch_delay_seconds: 20
+preprocessing:
+  moving_average_days: [3, 7]
+  rolling_std_days: [3, 7]
+
+ml_training:
+  model_type: "RandomForest"  # Options: RandomForest, LinearRegression
+  test_size: 0.2
+  random_state: 42
+
