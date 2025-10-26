@@ -67,7 +67,7 @@ def generate_report(symbol):
 
    
    # here the plotting 
-    plt.figure(figsize=(6,3))
+    plt.figure(figsize=(6,10))
     plt.plot(df.index, y, label="Actual Close")
     plt.plot(df.index, y_pred, label="Predicted Close")
     plt.title(f"{symbol} Actual vs Predicted")
