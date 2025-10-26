@@ -26,3 +26,6 @@ matplotlib
 
 
 joblib
+# For machine learning
+scikit-learn
+
