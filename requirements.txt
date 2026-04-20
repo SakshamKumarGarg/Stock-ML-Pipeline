@@ -1,31 +1,21 @@
-# For data manipulation
-numpy
+# Core
 pandas
-
-# For making HTTP requests
-requests
-
-# For loading environment variables
-python-dotenv
-
-# For YAML configuration
-PyYAML
-
-# For date and time handling
-python-dateutil
-
-# For file path manipulations
-pathlib
-
-# For GitHub and Git operations
-PyGithub
-GitPython
-
-# For plotting and visualization
+numpy
 matplotlib
 
+# API & utilities
+requests
+python-dotenv
+pyyaml
 
-joblib
-# For machine learning
+# Machine Learning
 scikit-learn
+xgboost
 
+# Model saving
+joblib
+
+# Dashboard
+streamlit
+
+yfinance

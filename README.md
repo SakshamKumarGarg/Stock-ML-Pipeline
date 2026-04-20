@@ -1,46 +1,28 @@
-# 🧠 StockMLPipeline
+# 📈 Stock Market Prediction ML Pipeline
 
-[![Python](https://img.shields.io/badge/Python-3.12-blue.svg)](https://www.python.org/)
-[![GitHub Actions](https://img.shields.io/github/actions/workflow/status/yourusername/StockMLPipeline/pipeline.yml?label=GitHub%20Actions)](https://github.com/yourusername/StockMLPipeline/actions)
-[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-[![Repo Size](https://img.shields.io/github/repo-size/yourusername/StockMLPipeline.svg)](https://github.com/yourusername/StockMLPipeline)
-
-> ⚙️ *A modular and automated Machine Learning pipeline for stock data — from fetching and preprocessing to model training and reporting.*
+An end-to-end **Machine Learning pipeline** for stock market prediction using multiple models, time-series data, and an interactive dashboard.
 
 ---
 
-## 📘 Overview
+## 🚀 Features
 
-**StockMLPipeline** is a configurable, per-symbol ML pipeline that automates:
-- Fetching real stock data from **Alpha Vantage**
-- Cleaning, preprocessing, and feature generation
-- Training ML models for each stock symbol
-- Saving performance metrics, models, and plots
-- Optionally running the entire process automatically via **GitHub Actions**
-
-The project demonstrates practical ML engineering and lightweight MLOps skills — perfect for showcasing workflow automation and structured ML design.
-
----
-
-## 🔄 Pipeline Phases
-
-| Phase | Description |
-|-------|--------------|
-| **Phase 1** | Fetch stock data using the Alpha Vantage API (one CSV per symbol). |
-| **Phase 2** | Preprocess data (handle NaNs, compute moving averages, volatility features). |
-| **Phase 3** | Train ML models per symbol (e.g., RandomForest) and evaluate with MSE/R². |
-| **Phase 4** | Automate the entire process using GitHub Actions with daily report updates. |
-
----
-
-## 🧩 Tech Stack
-
-| Category | Tools |
-|-----------|-------|
-| **Language** | Python 3.12 |
-| **Libraries** | `pandas`, `scikit-learn`, `matplotlib`, `pyyaml`, `joblib` |
-| **Automation** | GitHub Actions |
-| **Data Source** | Alpha Vantage API |
+- 📊 Fetch real-time stock data using **Yahoo Finance (yfinance)**
+- 🧹 Data preprocessing & feature engineering
+- 🤖 Train multiple ML models:
+  - Linear Regression
+  - Decision Tree
+  - Random Forest
+  - Extra Trees
+  - Gradient Boosting
+  - XGBoost
+- 📉 Time-series aware training (no data leakage)
+- 📊 Predict **returns instead of price** (realistic ML approach)
+- 📈 Evaluation using:
+  - MSE
+  - R² Score
+  - Direction Accuracy (%)
+- 🧠 Naive baseline comparison
+- 📊 Interactive **Streamlit Dashboard**
 
 ---
 
@@ -63,12 +45,7 @@ source .venv/bin/activate
 ### 3️⃣ Install dependencies
 ```
 pip install -r requirements.txt
-```
 
-### 4️⃣ Add your API key
-Create a .env file in the root folder:
-```
-ALPHA_VANTAGE_API_KEY=your_api_key_here
 ```
 
 ### 5️⃣ Run the full pipeline

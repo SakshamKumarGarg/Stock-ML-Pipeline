@@ -1,3 +1,0 @@
-AMZN Report
-MSE: 3.5683
-R²: 0.9188

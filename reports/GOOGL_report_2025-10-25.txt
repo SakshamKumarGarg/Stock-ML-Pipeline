@@ -1,3 +1,0 @@
-GOOGL Report
-MSE: 7.3291
-R²: 0.9918

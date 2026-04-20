@@ -1,3 +1,4 @@
+# 📊 Stocks to fetch
 symbols:
   - AAPL
   - GOOGL
@@ -5,13 +6,38 @@ symbols:
   - AMZN
   - META
   - NFLX
-fetch_delay_seconds: 20
-preprocessing:
-  moving_average_days: [3, 7]
-  rolling_std_days: [3, 7]
 
+
+# ⚙️ Preprocessing settings
+preprocessing:
+  moving_average_days: [3, 7, 14]
+  rolling_std_days: [3, 7, 14]
+
+# 🤖 ML Training settings
 ml_training:
-  model_type: "RandomForest"  # Options: RandomForest, LinearRegression
-  test_size: 0.2
+  test_size: 0.2          # used for reference (not used in time split now)
   random_state: 42
 
+# 📈 Evaluation settings
+evaluation:
+  metrics:
+    - MSE
+    - R2
+    - MAPE
+    - Accuracy
+
+# 🧠 Model settings (for future extensibility)
+models:
+  use:
+    - LinearRegression
+    - DecisionTree
+    - RandomForest
+    - ExtraTrees
+    - GradientBoosting
+    - XGBoost
+    - SVR
+
+# 📊 Dashboard settings (future use)
+dashboard:
+  show_best_model: true
+  show_accuracy: true

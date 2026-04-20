@@ -5,8 +5,11 @@ from datetime import datetime
 import yaml
 
 
-with open("config.yaml", "r") as f:
+with open("config.yaml", "r", encoding="utf-8") as f:
     config = yaml.safe_load(f)
+
+TEST_SIZE = config.get("ml_training", {}).get("test_size", 0.2)
+RANDOM_STATE = config.get("ml_training", {}).get("random_state", 42)
 
 SYMBOLS = config.get("symbols", ["AAPL"])
 MA_DAYS = config.get("preprocessing", {}).get("moving_average_days", [3, 7])
@@ -25,9 +28,20 @@ def get_latest_csv(symbol):
 
 def preprocess_symbol(symbol):
     csv_path = get_latest_csv(symbol)
-    df = pd.read_csv(csv_path,index_col=0,parse_dates=True)
+    df = pd.read_csv(csv_path, index_col=0)
 
-    df.dropna(inplace=True)  ## clean
+    # Fix date
+    df.index = pd.to_datetime(df.index, errors="coerce")
+
+    # Fix numeric types
+    cols = ["1. open", "2. high", "3. low", "4. close", "5. volume"]
+    for col in cols:
+        df[col] = pd.to_numeric(df[col], errors="coerce")
+
+    # Clean data
+    df.dropna(inplace=True)
+
+    df.sort_index(inplace=True)
 
     # Here we applying a feature engineering 
     for days in MA_DAYS:
@@ -37,6 +51,9 @@ def preprocess_symbol(symbol):
         df[f"STD_{days}"] = df["4. close"].rolling(days).std()
 
     df["%_change"] = df["4. close"].pct_change()
+    df["Lag_1"] = df["4. close"].shift(1)
+    df["Lag_2"] = df["4. close"].shift(2)
+    df["Lag_3"] = df["4. close"].shift(3)
 
     df.dropna(inplace=True)  # dropping rows after with NaN with rolling
 

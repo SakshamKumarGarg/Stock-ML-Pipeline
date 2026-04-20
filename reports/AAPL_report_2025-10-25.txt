@@ -1,3 +1,0 @@
-AAPL Report
-MSE: 5.6752
-R²: 0.9859

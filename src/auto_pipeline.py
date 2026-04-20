@@ -15,7 +15,7 @@ REPORTS_DIR.mkdir(exist_ok=True)
 
 
 from yaml import safe_load
-with open(ROOT_DIR / "config.yaml") as f:
+with open("config.yaml", "r", encoding="utf-8") as f:
     config = safe_load(f)
 
 
@@ -32,50 +32,72 @@ def run_phase(script_name):
     subprocess.run(["python", f"src/{script_name}"], check=True)
 
 def generate_report(symbol):
-    """Generate a small sample report and plot per symbol"""
-    # Load latest processed CSV that we call at last in program for every iteration
+    import numpy as np
+
     csv_files = sorted(PROCESSED_DIR.glob(f"{symbol}_processed_*.csv"))
     if not csv_files:
-        print(f"[WARN] No processed CSV for {symbol}")
         return
+
     df = pd.read_csv(csv_files[-1], index_col=0, parse_dates=True)
     df.sort_index(inplace=True)
-    df["Target"] = df["4. close"].shift(-1)
+
+    df["Target"] = df["4. close"].pct_change().shift(-1)
     df.dropna(inplace=True)
+
     X = df.drop(columns=["Target"])
     y = df["Target"]
 
-    #Load the model for every symbol
-    model_files = sorted(MODELS_DIR.glob(f"{symbol}_{MODEL_TYPE}_model_*.pkl"))
-    if not model_files:
-        print(f"[WARN] No model for {symbol}")
-        return
-    model = joblib.load(model_files[-1])
+    model_files = list(MODELS_DIR.glob(f"{symbol}_*_model.pkl"))
 
+    results = {}
 
-    y_pred = model.predict(X)
-    mse = mean_squared_error(y, y_pred)
-    r2 = r2_score(y, y_pred)
+    for file in model_files:
+        name = file.name.split("_")[1]
+        model = joblib.load(file)
 
-   
-   # creating a report by analyzing MSE from above model 
-    report_file = REPORTS_DIR / f"{symbol}_report_{datetime.now().strftime('%Y-%m-%d')}.txt"
-    with open(report_file, "w") as f:
-        f.write(f"{symbol} Report\n")
-        f.write(f"MSE: {mse:.4f}\nR²: {r2:.4f}\n")
-    print(f"Report saved → {report_file}")
+        try:
+            y_pred = model.predict(X)
+        except:
+            continue
 
-   
-   # here the plotting 
-    plt.figure(figsize=(6,10))
-    plt.plot(df.index, y, label="Actual Close")
-    plt.plot(df.index, y_pred, label="Predicted Close")
-    plt.title(f"{symbol} Actual vs Predicted")
-    plt.legend()
-    plt.tight_layout()
-    plt.savefig(REPORTS_DIR / f"{symbol}_plot_{datetime.now().strftime('%Y-%m-%d')}.png")
-    plt.close()
+        mse = mean_squared_error(y, y_pred)
+        r2 = r2_score(y, y_pred)
 
+        mse = np.mean((y - y_pred) ** 2)
+        direction_acc = (np.sign(y_pred) == np.sign(y)).mean() * 100  # better for returns
+
+        results[name] = {"MSE": mse, "R2": r2, "ACC": direction_acc}
+
+    # ✅ Baseline model
+    y_naive = df["4. close"].pct_change()
+    y_naive = y_naive.shift(1)  # previous return as prediction
+
+    # Align with y
+    y_naive = y_naive.loc[y.index]
+
+    # 🚨 Remove NaN rows (CRITICAL)
+    valid_idx = y_naive.notna() & y.notna()
+
+    y_naive = y_naive[valid_idx]
+    y_valid = y[valid_idx]
+
+    mse_naive = mean_squared_error(y_valid, y_naive)
+
+    results["Naive"] = {"MSE": mse_naive, "R2": 0, "ACC": 0}
+
+    # Save report
+    report = REPORTS_DIR / f"{symbol}_report.txt"
+    with open(report, "w") as f:
+        f.write(f"{symbol} Report\n\n")
+
+        for m, val in results.items():
+            f.write(f"{m}\n")
+            f.write(f"MSE: {val['MSE']:.4f}\n")
+            f.write(f"R2: {val['R2']:.4f}\n")
+            f.write(f"Accuracy: {val['ACC']:.2f}%\n")
+            f.write("-"*30 + "\n")
+
+    print(f"Report saved → {report}")
 
 
 if __name__ == "__main__":
