@@ -1,0 +1,15 @@
+{
+  "name": "stock-ml-workflow-web",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "predev": "python ../src/dashboard_api.py export",
+    "dev": "node server.js",
+    "prestart": "python ../src/dashboard_api.py export",
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}
